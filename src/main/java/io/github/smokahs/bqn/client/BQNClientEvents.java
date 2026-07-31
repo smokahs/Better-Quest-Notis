@@ -1,11 +1,15 @@
 package io.github.smokahs.bqn.client;
 
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
+
+import org.jetbrains.annotations.Nullable;
 
 import dev.ftb.mods.ftblibrary.icon.ItemIcon;
 import io.github.smokahs.bqn.BetterQuestNotis;
@@ -26,20 +30,38 @@ public final class BQNClientEvents {
         QuestNotification.reset();
     }
 
-    /** {@code /bqnpreview [quest name]} - fires a popup so the config can be tuned without finishing a quest. */
+    /**
+     * {@code /bqn "[questname]" "[header]" [icon]}
+     * EXAMPLE: /bpn "Kill the enderdragon" "Quest... Failed" minecraft:stick
+     */
     @SubscribeEvent
     static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("bqnpreview")
-                .executes(ctx -> preview("Test Quest"))
-                .then(Commands.argument("name", StringArgumentType.greedyString())
-                        .executes(ctx -> preview(StringArgumentType.getString(ctx, "name")))));
+        CommandBuildContext buildContext = event.getBuildContext();
+
+        event.getDispatcher().register(Commands.literal("bqn")
+                .executes(ctx -> preview(null, null, null))
+                .then(Commands.argument("questname", StringArgumentType.string())
+                        .executes(ctx -> preview(questName(ctx), null, null))
+                        .then(Commands.argument("header", StringArgumentType.string())
+                                .executes(ctx -> preview(questName(ctx), header(ctx), null))
+                                .then(Commands.argument("icon", ItemArgument.item(buildContext))
+                                        .executes(ctx -> preview(questName(ctx), header(ctx),
+                                                ItemArgument.getItem(ctx, "icon").createItemStack(1, false)))))));
     }
 
-    private static int preview(String name) {
+    private static String questName(com.mojang.brigadier.context.CommandContext<?> ctx) {
+        return StringArgumentType.getString(ctx, "questname");
+    }
+
+    private static String header(com.mojang.brigadier.context.CommandContext<?> ctx) {
+        return StringArgumentType.getString(ctx, "header");
+    }
+
+    private static int preview(@Nullable String questName, @Nullable String header, @Nullable ItemStack icon) {
         QuestNotification.enqueue(
-                Component.translatable("bqn.notice.quest_complete"),
-                Component.literal(name),
-                ItemIcon.getItemIcon(new ItemStack(Items.DIAMOND)));
+                header == null ? Component.translatable("bqn.notice.quest_complete") : Component.literal(header),
+                Component.literal(questName == null ? "Test Quest" : questName),
+                ItemIcon.getItemIcon(icon == null ? new ItemStack(Items.DIAMOND) : icon));
         return 1;
     }
 }

@@ -39,7 +39,13 @@ Client side only
 
 ## Previewing
 
-`/bpqnpreview` or alternatively if you want, `/bqnpreview [quest name]`
+`/bqn [questname] [header] [icon]` fires a 'fake quest' customizable popup
+
+```
+/bqn "Slay the Ender Dragon" "Quest Failed" minecraft:dragon_egg 
+```
+
+`header` is the line that normally reads `Quest Complete`. `icon` is any item id. Names with spaces need quotes.
 
 ## Building
 

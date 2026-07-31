@@ -24,9 +24,8 @@ public final class BQNClientEvents {
     private BQNClientEvents() {
     }
 
-    /** Don't carry a pending popup across into the next world. */
     @SubscribeEvent
-    static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
+    public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         QuestNotification.reset();
     }
 
@@ -35,7 +34,7 @@ public final class BQNClientEvents {
      * EXAMPLE: /bpn "Kill the enderdragon" "Quest... Failed" minecraft:stick
      */
     @SubscribeEvent
-    static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
+    public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
         CommandBuildContext buildContext = event.getBuildContext();
 
         event.getDispatcher().register(Commands.literal("bqn")

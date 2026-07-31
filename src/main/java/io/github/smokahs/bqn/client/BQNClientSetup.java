@@ -12,7 +12,7 @@ public final class BQNClientSetup {
     }
 
     @SubscribeEvent
-    static void registerOverlays(RegisterGuiOverlaysEvent event) {
+    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("quest_notification", QuestNotification::render);
     }
 }

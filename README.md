@@ -3,7 +3,7 @@
 A small FTB Quests addon for Minecraft Forge 1.20.1 that replaces the small corner toast you get on
 quest completion with the **Better Questing** popup:
 
-- the quest's icon, centre screen
+- the quest's icon, center screen
 - **`Quest Complete`** in bold, underlined white text
 - the quest name underneath
 - the level-up sound

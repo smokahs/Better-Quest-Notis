@@ -1,0 +1,25 @@
+# gradle
+.gradle/
+build/
+out/
+bin/
+mcmodsrepo/
+
+# forge dev runs
+run/
+run-data/
+runs/
+
+# local build/run logs
+build-log.txt
+runclient-log.txt
+
+# ide
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+eclipse/

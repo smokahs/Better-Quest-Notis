@@ -18,7 +18,8 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -59,10 +60,10 @@ public final class QuestNotification {
     private static boolean fading;
     private static float fadeAlpha = 1F;
 
-    private static String cachedTitleColorKey = "";
-    private static int cachedTitleColor = 0xFFFFFF;
-    private static String cachedSubtitleColorKey = "";
-    private static int cachedSubtitleColor = 0xFFFFFF;
+    private static String cachedTitleStyleKey = "";
+    private static Style cachedTitleStyle = Style.EMPTY;
+    private static String cachedSubtitleStyleKey = "";
+    private static Style cachedSubtitleStyle = Style.EMPTY;
 
     private QuestNotification() {
     }
@@ -143,8 +144,8 @@ public final class QuestNotification {
         int height = Mth.ceil(screenHeight / scale);
         int titleY = Mth.ceil(height * BQNConfig.Y_FRACTION.get());
 
-        Component title = styleTitle(notice.title);
-        Component subtitle = notice.subtitle;
+        Component title = decorate(notice.title, titleStyle());
+        Component subtitle = decorate(notice.subtitle, subtitleStyle());
 
         boolean shadow = BQNConfig.TEXT_SHADOW.get();
 
@@ -170,11 +171,10 @@ public final class QuestNotification {
             }
         }
 
-        int titleColor = alphaBits | titleColor();
-        int subtitleColor = alphaBits | subtitleColor();
+        int fallback = alphaBits | 0xFFFFFF;
 
-        graphics.drawString(mc.font, title, width / 2 - mc.font.width(title) / 2, titleY, titleColor, shadow);
-        graphics.drawString(mc.font, subtitle, width / 2 - mc.font.width(subtitle) / 2, titleY + 12, subtitleColor, shadow);
+        graphics.drawString(mc.font, title, width / 2 - mc.font.width(title) / 2, titleY, fallback, shadow);
+        graphics.drawString(mc.font, subtitle, width / 2 - mc.font.width(subtitle) / 2, titleY + 12, fallback, shadow);
 
         pose.popPose();
         RenderSystem.disableBlend();
@@ -231,16 +231,12 @@ public final class QuestNotification {
         pose.popPose();
     }
 
-    private static Component styleTitle(Component title) {
-        // copy, don't flatten - getString() would throw away the colours the pack author wrote
-        MutableComponent styled = title.copy();
-        if (BQNConfig.BOLD_TITLE.get()) {
-            styled.withStyle(ChatFormatting.BOLD);
+    // config style goes underneath, so the quest's own formatting wins
+    private static Component decorate(Component text, Style style) {
+        if (style == Style.EMPTY) {
+            return text;
         }
-        if (BQNConfig.UNDERLINE_TITLE.get()) {
-            styled.withStyle(ChatFormatting.UNDERLINE);
-        }
-        return styled;
+        return text.copy().setStyle(text.getStyle().applyTo(style));
     }
 
     private static void playSound(Minecraft mc) {
@@ -258,30 +254,56 @@ public final class QuestNotification {
                 BQNConfig.SOUND_VOLUME.get().floatValue()));
     }
 
-    private static int titleColor() {
-        String raw = BQNConfig.TITLE_COLOR.get();
-        if (!raw.equals(cachedTitleColorKey)) {
-            cachedTitleColorKey = raw;
-            cachedTitleColor = parseColor(raw);
+    private static Style titleStyle() {
+        String raw = BQNConfig.TITLE_STYLE.get();
+        if (!raw.equals(cachedTitleStyleKey)) {
+            cachedTitleStyleKey = raw;
+            cachedTitleStyle = parseStyle(raw);
         }
-        return cachedTitleColor;
+        return cachedTitleStyle;
     }
 
-    private static int subtitleColor() {
-        String raw = BQNConfig.SUBTITLE_COLOR.get();
-        if (!raw.equals(cachedSubtitleColorKey)) {
-            cachedSubtitleColorKey = raw;
-            cachedSubtitleColor = parseColor(raw);
+    private static Style subtitleStyle() {
+        String raw = BQNConfig.SUBTITLE_STYLE.get();
+        if (!raw.equals(cachedSubtitleStyleKey)) {
+            cachedSubtitleStyleKey = raw;
+            cachedSubtitleStyle = parseStyle(raw);
         }
-        return cachedSubtitleColor;
+        return cachedSubtitleStyle;
     }
 
-    private static int parseColor(String raw) {
-        try {
-            return Integer.parseInt(raw.trim().replace("#", ""), 16) & 0xFFFFFF;
-        } catch (NumberFormatException e) {
-            return 0xFFFFFF;
+    private static Style parseStyle(String raw) {
+        String text = raw.trim();
+        if (text.isEmpty()) {
+            return Style.EMPTY;
         }
+
+        // a bare hex value, which is all titleColor used to accept
+        if (text.indexOf('&') < 0) {
+            TextColor color = TextColor.parseColor(text.startsWith("#") ? text : "#" + text);
+            return color == null ? Style.EMPTY : Style.EMPTY.withColor(color);
+        }
+
+        Style style = Style.EMPTY;
+        for (int i = 0; i < text.length() - 1; i++) {
+            if (text.charAt(i) != '&') {
+                continue;
+            }
+            if (text.charAt(i + 1) == '#' && i + 8 <= text.length()) {
+                TextColor color = TextColor.parseColor(text.substring(i + 1, i + 8));
+                if (color != null) {
+                    style = style.withColor(color);
+                    i += 7;
+                    continue;
+                }
+            }
+            ChatFormatting format = ChatFormatting.getByCode(text.charAt(i + 1));
+            if (format != null) {
+                style = style.applyFormat(format);
+            }
+            i++;
+        }
+        return style;
     }
 
     private static final class Notice {

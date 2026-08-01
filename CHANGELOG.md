@@ -2,9 +2,9 @@
 
 ## 1.3
 
-- Quest names and headers now keep their own formatting: `&` codes, `&#RRGGBB` hex colours and raw JSON components render as written and still fade with the popup
-- Removed `stripNameFormatting` - it is no longer needed, formatted text fades correctly
-- `titleColor` / `subtitleColor` are now the fallback colour, used only where the text has no colour of its own
+- Quest names and headers keep their own formatting: `&` codes, `&#RRGGBB` and raw JSON all render as written and still fade
+- `titleColor` / `subtitleColor` / `boldTitle` / `underlineTitle` replaced by `titleStyle` and `subtitleStyle`, which take `&` codes
+- `stripNameFormatting` removed, no longer needed
 - `/bqn` parses its text arguments like a real quest title, so formatting can be previewed
 
 ## 1.2

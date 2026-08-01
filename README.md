@@ -37,9 +37,9 @@ Client side only
 | display | `autoScale` | `true` | 1.5x when scaled width > 600 |
 | display | `scale` | `1.0` | Flat multiplier, applied at every GUI scale. `1.0` is Better Questing's original size |
 | icon | `showIcon` / `iconSize` / `iconOffset` | `true` / `16` / `20` | |
-| text | `boldTitle` / `underlineTitle` | `true` / `true` | |
 | text | `textShadow` | `false` | Better Questing drew flat text |
-| text | `titleColor` / `subtitleColor` | `FFFFFF` | Hex RGB, used only where the text has no colour of its own |
+| text | `titleStyle` | `&f&l&n` | `&` codes for the `Quest Complete` line |
+| text | `subtitleStyle` | `&f` | `&` codes for the quest name line |
 | sound | `playSound` / `sound` / `volume` / `pitch` | `true` / `minecraft:entity.player.levelup` / `1.0` / `1.0` | |
 
 ## Previewing
@@ -61,8 +61,12 @@ Both text arguments are parsed the same way FTB Quests parses a quest title, so 
 ## Formatting
 
 Quest names keep whatever formatting the pack author gave them - `&` codes, `&#RRGGBB` hex colours and raw
-JSON components all render as written, and fade in and out with the rest of the popup. `boldTitle` and
-`underlineTitle` are applied on top of the header's own formatting rather than replacing it.
+JSON components all render as written, and fade in and out with the rest of the popup.
+
+`titleStyle` and `subtitleStyle` take the same `&` codes: `&0`-`&f` or `&#RRGGBB` for colour, `&l` bold,
+`&n` underline, `&o` italic, `&m` strikethrough, `&k` obfuscated. They sit *underneath* the text's own
+formatting, so a coloured quest keeps its colour and only picks up the parts the config adds. A plain hex
+value like `FFFFFF` still works, so old `titleColor` values can be pasted straight across.
 
 ## Building
 

@@ -24,11 +24,9 @@ public final class BQNConfig {
     public static final ForgeConfigSpec.IntValue ICON_SIZE;
     public static final ForgeConfigSpec.IntValue ICON_OFFSET;
 
-    public static final ForgeConfigSpec.BooleanValue BOLD_TITLE;
-    public static final ForgeConfigSpec.BooleanValue UNDERLINE_TITLE;
     public static final ForgeConfigSpec.BooleanValue TEXT_SHADOW;
-    public static final ForgeConfigSpec.ConfigValue<String> TITLE_COLOR;
-    public static final ForgeConfigSpec.ConfigValue<String> SUBTITLE_COLOR;
+    public static final ForgeConfigSpec.ConfigValue<String> TITLE_STYLE;
+    public static final ForgeConfigSpec.ConfigValue<String> SUBTITLE_STYLE;
 
     public static final ForgeConfigSpec.BooleanValue PLAY_SOUND;
     public static final ForgeConfigSpec.ConfigValue<String> SOUND;
@@ -85,19 +83,17 @@ public final class BQNConfig {
 
         builder.pop().comment("Text").push("text");
 
-        BOLD_TITLE = builder.define("boldTitle", true);
-        UNDERLINE_TITLE = builder.define("underlineTitle", true);
         TEXT_SHADOW = builder
                 .comment("Better Questing drew the text without a drop shadow.")
                 .define("textShadow", false);
-        TITLE_COLOR = builder
-                .comment("Hex RGB of the \"Quest Complete\" line.",
-                        "Only used for text that has no colour of its own.")
-                .define("titleColor", "FFFFFF");
-        SUBTITLE_COLOR = builder
-                .comment("Hex RGB of the quest name line.",
-                        "Only used for text that has no colour of its own - a coloured quest keeps its own colours.")
-                .define("subtitleColor", "FFFFFF");
+        TITLE_STYLE = builder
+                .comment("Style of the \"Quest Complete\" line, as & codes.",
+                        "&0-&f or &#RRGGBB for colour, &l bold, &n underline, &o italic, &m strikethrough, &k obfuscated.",
+                        "A plain hex value like FFFFFF still works. The quest's own formatting wins wherever it sets something.")
+                .define("titleStyle", "&f&l&n");
+        SUBTITLE_STYLE = builder
+                .comment("Style of the quest name line, same format as titleStyle.")
+                .define("subtitleStyle", "&f");
 
         builder.pop().comment("Sound").push("sound");
 

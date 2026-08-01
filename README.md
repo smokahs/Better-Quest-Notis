@@ -39,8 +39,7 @@ Client side only
 | icon | `showIcon` / `iconSize` / `iconOffset` | `true` / `16` / `20` | |
 | text | `boldTitle` / `underlineTitle` | `true` / `true` | |
 | text | `textShadow` | `false` | Better Questing drew flat text |
-| text | `stripNameFormatting` | `true` | Off keeps custom quest colours, but coloured text won't fade |
-| text | `titleColor` / `subtitleColor` | `FFFFFF` | Hex RGB |
+| text | `titleColor` / `subtitleColor` | `FFFFFF` | Hex RGB, used only where the text has no colour of its own |
 | sound | `playSound` / `sound` / `volume` / `pitch` | `true` / `minecraft:entity.player.levelup` / `1.0` / `1.0` | |
 
 ## Previewing
@@ -52,6 +51,18 @@ Client side only
 ```
 
 `header` is the line that normally reads `Quest Complete`. `icon` is any item id. Names with spaces need quotes.
+
+Both text arguments are parsed the same way FTB Quests parses a quest title, so you can preview formatting:
+
+```
+/bqn "&6&lGolden &r&bQuest" "&#ff00ffQuest Complete"
+```
+
+## Formatting
+
+Quest names keep whatever formatting the pack author gave them - `&` codes, `&#RRGGBB` hex colours and raw
+JSON components all render as written, and fade in and out with the rest of the popup. `boldTitle` and
+`underlineTitle` are applied on top of the header's own formatting rather than replacing it.
 
 ## Building
 

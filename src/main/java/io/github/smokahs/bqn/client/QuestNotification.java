@@ -144,9 +144,7 @@ public final class QuestNotification {
         int titleY = Mth.ceil(height * BQNConfig.Y_FRACTION.get());
 
         Component title = styleTitle(notice.title);
-        Component subtitle = BQNConfig.STRIP_NAME_FORMATTING.get()
-                ? Component.literal(notice.subtitle.getString())
-                : notice.subtitle;
+        Component subtitle = notice.subtitle;
 
         boolean shadow = BQNConfig.TEXT_SHADOW.get();
 
@@ -234,7 +232,8 @@ public final class QuestNotification {
     }
 
     private static Component styleTitle(Component title) {
-        MutableComponent styled = Component.literal(title.getString());
+        // copy, don't flatten - getString() would throw away the colours the pack author wrote
+        MutableComponent styled = title.copy();
         if (BQNConfig.BOLD_TITLE.get()) {
             styled.withStyle(ChatFormatting.BOLD);
         }

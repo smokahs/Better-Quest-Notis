@@ -27,7 +27,6 @@ public final class BQNConfig {
     public static final ForgeConfigSpec.BooleanValue BOLD_TITLE;
     public static final ForgeConfigSpec.BooleanValue UNDERLINE_TITLE;
     public static final ForgeConfigSpec.BooleanValue TEXT_SHADOW;
-    public static final ForgeConfigSpec.BooleanValue STRIP_NAME_FORMATTING;
     public static final ForgeConfigSpec.ConfigValue<String> TITLE_COLOR;
     public static final ForgeConfigSpec.ConfigValue<String> SUBTITLE_COLOR;
 
@@ -91,15 +90,13 @@ public final class BQNConfig {
         TEXT_SHADOW = builder
                 .comment("Better Questing drew the text without a drop shadow.")
                 .define("textShadow", false);
-        STRIP_NAME_FORMATTING = builder
-                .comment("Strip the quest title's own colours so it fades with the rest of the popup.",
-                        "Turn off to keep custom quest colours - coloured text will not fade.")
-                .define("stripNameFormatting", true);
         TITLE_COLOR = builder
-                .comment("Hex RGB of the \"Quest Complete\" line.")
+                .comment("Hex RGB of the \"Quest Complete\" line.",
+                        "Only used for text that has no colour of its own.")
                 .define("titleColor", "FFFFFF");
         SUBTITLE_COLOR = builder
-                .comment("Hex RGB of the quest name line (ignored when stripNameFormatting is off and the quest is coloured).")
+                .comment("Hex RGB of the quest name line.",
+                        "Only used for text that has no colour of its own - a coloured quest keeps its own colours.")
                 .define("subtitleColor", "FFFFFF");
 
         builder.pop().comment("Sound").push("sound");

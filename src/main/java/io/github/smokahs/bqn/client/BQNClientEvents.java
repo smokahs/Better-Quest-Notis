@@ -12,6 +12,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import org.jetbrains.annotations.Nullable;
 
 import dev.ftb.mods.ftblibrary.icon.ItemIcon;
+import dev.ftb.mods.ftbquests.util.TextUtils;
 import io.github.smokahs.bqn.BetterQuestNotis;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
@@ -32,6 +33,9 @@ public final class BQNClientEvents {
     /**
      * {@code /bqn "[questname]" "[header]" [icon]}
      * EXAMPLE: /bpn "Kill the enderdragon" "Quest... Failed" minecraft:stick
+     * <p>
+     * Both text arguments go through FTB Quests' own parser, so {@code &}codes, {@code &#RRGGBB}
+     * and raw JSON components behave exactly as they would in a real quest title.
      */
     @SubscribeEvent
     public static void onRegisterClientCommands(RegisterClientCommandsEvent event) {
@@ -58,8 +62,8 @@ public final class BQNClientEvents {
 
     private static int preview(@Nullable String questName, @Nullable String header, @Nullable ItemStack icon) {
         QuestNotification.enqueue(
-                header == null ? Component.translatable("bqn.notice.quest_complete") : Component.literal(header),
-                Component.literal(questName == null ? "Test Quest" : questName),
+                header == null ? Component.translatable("bqn.notice.quest_complete") : TextUtils.parseRawText(header),
+                questName == null ? Component.literal("Test Quest") : TextUtils.parseRawText(questName),
                 ItemIcon.getItemIcon(icon == null ? new ItemStack(Items.DIAMOND) : icon));
         return 1;
     }

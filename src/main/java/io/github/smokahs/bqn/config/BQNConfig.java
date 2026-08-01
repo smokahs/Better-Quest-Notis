@@ -87,8 +87,9 @@ public final class BQNConfig {
                 .comment("Better Questing drew the text without a drop shadow.")
                 .define("textShadow", false);
         TITLE_STYLE = builder
-                .comment("Style of the \"Quest Complete\" line, as & codes.",
-                        "&0-&f or &#RRGGBB for colour, &l bold, &n underline, &o italic, &m strikethrough, &k obfuscated.",
+                .comment("Style of the \"Quest Complete\" line, written as Minecraft format codes.",
+                        "Each code is an & followed by one of:",
+                        "0-f or #RRGGBB for colour, l bold, n underline, o italic, m strikethrough, k obfuscated.",
                         "A plain hex value like FFFFFF still works. The quest's own formatting wins wherever it sets something.")
                 .define("titleStyle", "&f&l&n");
         SUBTITLE_STYLE = builder

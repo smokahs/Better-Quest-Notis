@@ -1,6 +1,11 @@
+<p align="center">
+  <img src="src/main/resources/BQN.png" width="200" alt="Better Quest Notis icon"/>
+</p>
+
+
 # Better (FTB) Quest Notifications!
 
-A small FTB Quests addon for Minecraft Forge 1.20.1 that replaces the small corner toast you get on
+A lightweight FTB Quests addon for Minecraft Forge 1.20.1 that replaces the small corner toast you get on
 quest completion with the **Better Questing** popup:
 
 - the quest's icon, center screen
@@ -24,12 +29,13 @@ Client side only
 | --- | --- | --- | --- |
 | general | `enabled` | `true` | Master switch |
 | general | `keepFtbToast` | `false` | Show FTB's corner toast as well as the popup |
-| general | `useFtbTitles` | `false` | Use "Quest completed!" instead of "Quest Complete" |
+| general | `defaultTaskToast` | `true` | Leave single task completions to FTB's corner toast, so the popup is only used for quests, chapters and the whole file |
+| general | `useFtbTitles` | `true` | Use "Quest completed!" instead of "Quest Complete" |
 | general | `maxQueued` | `20` | Drop the queue past this many, so bulk completions don't spam |
 | display | `duration` | `6.0` | Seconds per popup |
 | display | `yFraction` | `0.25` | Title position as a fraction of screen height |
 | display | `autoScale` | `true` | 1.5x when scaled width > 600 |
-| display | `scale` | `1.3` | Flat multiplier, applied at every GUI scale. `1.0` is Better Questing's original size |
+| display | `scale` | `1.0` | Flat multiplier, applied at every GUI scale. `1.0` is Better Questing's original size |
 | icon | `showIcon` / `iconSize` / `iconOffset` | `true` / `16` / `20` | |
 | text | `boldTitle` / `underlineTitle` | `true` / `true` | |
 | text | `textShadow` | `false` | Better Questing drew flat text |

@@ -11,6 +11,7 @@ public final class BQNConfig {
 
     public static final ForgeConfigSpec.BooleanValue ENABLED;
     public static final ForgeConfigSpec.BooleanValue KEEP_FTB_TOAST;
+    public static final ForgeConfigSpec.BooleanValue DEFAULT_TASK_TOAST;
     public static final ForgeConfigSpec.BooleanValue USE_FTB_TITLES;
     public static final ForgeConfigSpec.IntValue MAX_QUEUED;
 
@@ -46,9 +47,12 @@ public final class BQNConfig {
         KEEP_FTB_TOAST = builder
                 .comment("Also show FTB Quests' own corner toast. Off by default - the popup replaces it.")
                 .define("keepFtbToast", false);
+        DEFAULT_TASK_TOAST = builder
+                .comment("Uses FTB Quests default Task completion corner toast.")
+                .define("defaultTaskToast", true);
         USE_FTB_TITLES = builder
                 .comment("Use FTB Quests' wording (\"Quest completed!\") instead of Better Questing's (\"Quest Complete\").")
-                .define("useFtbTitles", false);
+                .define("useFtbTitles", true);
         MAX_QUEUED = builder
                 .comment("Drop the whole queue if more than this many popups pile up, to avoid spam after a bulk completion.")
                 .defineInRange("maxQueued", 20, 1, 256);
@@ -56,19 +60,17 @@ public final class BQNConfig {
         builder.pop().comment("Timing and placement").push("display");
 
         DURATION = builder
-                .comment("Total lifetime of one popup, in seconds. Fades in over the first second,",
-                        "fades out over the second-to-last, and the final second is empty padding.")
+                .comment("Total lifetime of one popup, in seconds. Includes text and quest icon fade")
                 .defineInRange("duration", 6.0D, 3.0D, 60.0D);
         Y_FRACTION = builder
-                .comment("Vertical position of the title, as a fraction of screen height. 0.25 = Better Questing's placement.")
+                .comment("Vertical position of the title.")
                 .defineInRange("yFraction", 0.25D, 0.0D, 1.0D);
         AUTO_SCALE = builder
                 .comment("Render at 1.5x on wide GUIs (scaled width > 600), like Better Questing did.")
                 .define("autoScale", true);
         SCALE = builder
-                .comment("Flat size multiplier, applied at every GUI scale and on top of autoScale.",
-                        "1.3 = Better Questing's original size plus 30%.")
-                .defineInRange("scale", 1.3D, 0.25D, 4.0D);
+                .comment("Flat size multiplier, applied at every GUI scale and on top of autoScale.")
+                .defineInRange("scale", 1.0D, 0.25D, 4.0D);
 
         builder.pop().comment("Icon").push("icon");
 
